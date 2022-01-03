@@ -1,6 +1,7 @@
-# Readme
+# README
+This project is to use pyglet to create a boids simulation
 
-this is usefull
+## VERSIONS
 
-## more facts
-add the modules used and python versions ect here
+python 3.10.0
+pyglet 1.5.21

@@ -4,11 +4,6 @@ import random
 import statistics as stat
 import numpy as np
 
-#class boid:
-#    def __init__(self,idx,x,y):
-#        self.idx = idx
-#        self.x = x
-#        self.y = y
 
 #calculating boids
 def init_positions(num_of_boids,max_width,max_height,min_vel,max_vel):
@@ -55,9 +50,9 @@ def rule3(boids,vel_coff=8):
         v3.append(cov)
     return np.array(v3)
 
-def calc_new_positions(boids):
-    v1 = rule1(boids,30,pos_coff=50)
-    v2 = rule2(boids,30,1)
+def calc_new_positions(boids,window):
+    v1 = rule1(boids,30,pos_coff=100)
+    v2 = rule2(boids,30,100)
     v3 = rule3(boids,vel_coff=8)
 
     #update vel
@@ -67,6 +62,18 @@ def calc_new_positions(boids):
     #update pos
     boids[:,0:2] = boids[:,0:2] + boids[:,2:]
     #boids[:][1] = boids[:][1] + boids[:][3]
+
+    #loop the screen
+    for b in boids:
+        if b[0] > window.width:
+            b[0] = b[0] - window.width
+        elif b[0] < 0:
+            b[0] = window.width + b[0]
+
+        if b[1] > window.height:
+            b[1] = b[1] - window.height
+        elif b[1] < 0:
+            b[1] = window.height + b[1]
 
     return boids
 
@@ -104,12 +111,12 @@ def on_draw():
     label.draw()
     batch.draw()
 
-def update(dt,boids):
-    calc_new_positions(boids)
+def update(dt,boids,window):
+    calc_new_positions(boids,window)
     for i,b in enumerate(boids):
         sprites[i].x = b[0]
         sprites[i].y = b[1]
 
-pyglet.clock.schedule_interval(update, 1/60.,boids=boids)
+pyglet.clock.schedule_interval(update, 1/60.,boids=boids,window=window)
 
 pyglet.app.run()
